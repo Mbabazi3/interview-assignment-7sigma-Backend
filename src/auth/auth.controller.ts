@@ -1,32 +1,35 @@
 import {
+  Body,
   Controller,
   Post,
-  Body,
-  Res,
+  HttpCode,
   HttpStatus,
-  UsePipes,
-  ValidationPipe,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { AuthSignInDto } from './dto/authSigIn.dto';
 import { Response } from 'express';
-import { LoginDto } from './auth.validator';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Post('login')
-  @UsePipes(ValidationPipe)
-  async login(@Body() body: LoginDto, @Res() res: Response) {
-    const user = await this.authService.getUser(body.username, body.password);
+  async signIn(@Body() authSignInDto: AuthSignInDto, @Res() res: Response) {
+    const user = await this.authService.findOne(
+      authSignInDto.username,
+      authSignInDto.password,
+    );
 
     if (!user) {
       return res.status(HttpStatus.BAD_REQUEST).send({
-        message: 'Invalid credentials',
+        message: 'Invalid Credentials',
       });
     }
+
     return res.status(HttpStatus.OK).send({
-      jwtToken: await this.authService.generateJwt(user),
+      jwtToken: await this.authService.generateJwtToken(user),
       message: 'Login Successful',
     });
   }

@@ -32,14 +32,6 @@
 $ yarn install
 ```
 
-## Configuring the Project
-
-Setting up Environent Variables
-
-```bash
-$ SECRET_KEY = 'very Secret Key'
-```
-
 ## Running the app
 
 ```bash

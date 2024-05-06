@@ -11,7 +11,6 @@ export class AuthMiddleware implements NestMiddleware {
   constructor(private jwtService: JwtService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    console.log('middleware run');
     const authToken = req.headers.authorization;
 
     if (!authToken) {
